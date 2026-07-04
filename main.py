@@ -64,6 +64,10 @@ def settingsTab():
 def testTab():
     os.system('cls')
     tests = find_tc_files()
+    if len(tests) == 0:
+        print(colors.red("No .ctest files found!"))
+        os.system('pause')
+        exit(0)
 
     for i, test in enumerate(tests, 1):
         print(f"{i}. {test}")
