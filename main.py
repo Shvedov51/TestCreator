@@ -1,28 +1,41 @@
 import random
 import colors
 import os
+import time
 os.system('color')
 
-engLang = 1; # 1 - English, 2 - Russian
+engLang = 1; # 1 - any, 2 - Russian
 
 def find_tc_files():
     files = []
     for file in os.listdir('.'):
-        if file.endswith('.tc'):
+        if file.endswith('.ctest'):
             files.append(file)
     return files
 
+
 def loadfile(name_file):
     words = []
-    with open(name_file, encoding="utf-8") as file:
-        for line in file:
-            parts = line.strip().split('] [')
-            if len(parts) == 3:
-                en = parts[0].replace('[', '').strip()
-                trans = parts[1].strip()
-                ru = parts[2].replace(']', '').strip()
-                words.append([en, trans, ru])
-    print("Words loaded:", len(words))
+
+    if not os.path.exists(name_file):
+        print(colors.red("Files not found! Use .ctest format: [word] [transcription] [translation]"))
+        return words
+
+    try:
+        with open(name_file, encoding="utf-8") as f:
+            for line in f:
+                p = line.strip().split('] [')
+                if len(p) == 3:
+                    w = p[0].replace('[', '').strip()
+                    t = p[1].strip()
+                    r = p[2].replace(']', '').strip()
+                    if w and r:
+                        words.append([w, t, r])
+    except:
+        print(colors.red("Error to open file!"))
+        return words
+
+    print(colors.green(f"Loaded {len(words)} words"))
     return words
 
 def settingsTab():
@@ -30,10 +43,10 @@ def settingsTab():
     print("Question in:")
     global engLang
     if engLang == 1:
-        print(colors.blue("1. English") + " (current)")
+        print(colors.blue("1.Any language") + " (current)")
         print("2. Russian")
     else:
-        print("1. English (default)")
+        print("1. Any language")
         print(colors.blue("2. Russian") + " (current)")
 
     while True:
@@ -63,6 +76,7 @@ def testTab():
         return
 
     words = loadfile(selected_file)
+    start_time = time.time()
     if words == []:
         print("File is empty")
         exit(0)
@@ -95,7 +109,9 @@ def testTab():
             print(colors.red("Wrong"))
             print(f"Correct answer: {colors.blue(answer)}")
 
-    print(f"\nTotal: {right}/{total}")
+    end_time = time.time()
+    total_time = end_time - start_time
+    print(f"\nTotal: {right}/{total} {right/total*100:.1f}% {total_time:.2f}s")
     choice = 0
     return
 
