@@ -29,4 +29,6 @@ jobs:
     - name: Release
       uses: softprops/action-gh-release@v1
       with:
-        files: dist/TestCreator.exe
+        files: |
+          dist/TestCreator.exe
+          *.ctest
