@@ -4,7 +4,9 @@ import os
 import time
 os.system('color')
 
-engLang = 1; # 1 - any, 2 - Russian
+engLang = 1 # 1 - any, 2 - Russian
+resolved_words = 0
+mistakes = 0
 
 def find_tc_files():
     files = []
@@ -43,11 +45,11 @@ def settingsTab():
     print("Question in:")
     global engLang
     if engLang == 1:
-        print(colors.blue("1.Any language") + " (current)")
+        print("1. Any language" + " (current)")
         print("2. Russian")
     else:
         print("1. Any language")
-        print(colors.blue("2. Russian") + " (current)")
+        print("2. Russian" + " (current)")
 
     while True:
         user_input = input("Enter your choice: ")
@@ -83,6 +85,9 @@ def testTab():
     print(colors.blue("Enter <exit> to quit"))
 
     random.shuffle(words)
+    global resolved_words
+    global mistakes
+
     right = 0
     wrong_words = []
     total = min(20, len(words))
@@ -103,6 +108,8 @@ def testTab():
         if ans == 'exit':
             break
 
+        resolved_words += 1
+
         if ans.lower() == answer.lower():
             print(colors.green("Right"))
             right += 1
@@ -110,6 +117,7 @@ def testTab():
             print(colors.red("Wrong"))
             print(f"Correct answer: {colors.blue(answer)}")
             wrong_words.append([en, trans, ru])
+            mistakes += 1
 
     end_time = time.time()
     total_time = end_time - start_time
@@ -136,6 +144,7 @@ def testTab():
             if ans == 'exit':
                 break
 
+
             if ans.lower() == answer.lower():
                 print(colors.green("Right"))
                 right += 1
@@ -148,23 +157,33 @@ def testTab():
     choice = 0
     return
 
+def statTab():
+    os.system('cls')
+    print("Stats of this session")
+    print(f"Learned words: {colors.green(resolved_words)}")
+    print(f"Mistakes: {colors.red(mistakes)}")
+    os.system('pause')
+
 def main():
     while True:
         print("1. Tests")
         print("2. Settings")
-        print("3. Exit")
+        print("3. Statistic")
+        print("4. Exit")
         user_input = input("Enter your choice: ")
 
         if user_input == "":
             continue
 
-        if not int(user_input) in [1, 2, 3]:
+        if not int(user_input) in [1, 2, 3, 4]:
             continue
 
         choice = int(user_input)
 
+        if choice == 4:
+            exit()
         if choice == 3:
-            break
+            statTab()
         if choice == 2:
             settingsTab()
         if choice == 1:
