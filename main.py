@@ -25,64 +25,101 @@ def loadfile(name_file):
     print("Words loaded:", len(words))
     return words
 
-while True:
-    print("1. Tests")
-    print("2. Settings")
-    print("3. Exit")
-    choice = int(input("Enter your choice: "))
-    if choice == 3:
-        break
-    if choice == 2:
-        os.system('cls')
-        print("Question in:")
-        print("1. English(default)")
+def settingsTab():
+    os.system('cls')
+    print("Question in:")
+    global engLang
+    if engLang == 1:
+        print(colors.blue("1. English") + " (current)")
         print("2. Russian")
-        engLang = int(input("Enter your choice:"))
-    if choice == 1:
-        os.system('cls')
-        tests = find_tc_files()
+    else:
+        print("1. English (default)")
+        print(colors.blue("2. Russian") + " (current)")
 
-        for i, test in enumerate(tests, 1):
-            print(f"{i}. {test}")
-        test_number = int(input("Enter number of file:"))
-        os.system('cls')
-
-        if 1 <= test_number <= len(tests):
-            selected_file = tests[test_number - 1]
-            print(f"Selected: {selected_file}")
+    while True:
+        user_input = input("Enter your choice: ")
+        if user_input == "":
+            break
+        engLang = int(user_input)
+        if engLang in [1, 2]:
+            break
         else:
-            print("Invalid number!")
+            print("Invalid choice!")
+
+def testTab():
+    os.system('cls')
+    tests = find_tc_files()
+
+    for i, test in enumerate(tests, 1):
+        print(f"{i}. {test}")
+    test_number = int(input("Enter number of file:"))
+    os.system('cls')
+
+    if 1 <= test_number <= len(tests):
+        selected_file = tests[test_number - 1]
+        print(f"Selected: {selected_file}")
+    else:
+        print("Invalid number!")
+        return
+
+    words = loadfile(selected_file)
+    if words == []:
+        print("File is empty")
+        exit(0)
+    print(colors.blue("Enter <exit> to quit"))
+
+    random.shuffle(words)
+    right = 0
+    total = min(10, len(words))
+
+    for i in range(total):
+        en, trans, ru = words[i]
+
+        if (engLang == 1):
+            question = en
+            answer = ru
+        else:
+            question = ru
+            answer = en
+
+        print(f"\n{i + 1}. {question} ({trans})")
+        ans = input("Answer: ").strip()
+
+        if ans == 'exit':
+            break
+
+        if ans.lower() == answer.lower():
+            print(colors.green("Right"))
+            right += 1
+        else:
+            print(colors.red("Wrong"))
+            print(f"Correct answer: {colors.blue(answer)}")
+
+    print(f"\nTotal: {right}/{total}")
+    choice = 0
+    return
+
+def main():
+    while True:
+        print("1. Tests")
+        print("2. Settings")
+        print("3. Exit")
+        user_input = input("Enter your choice: ")
+
+        if user_input == "":
             continue
 
-        words = loadfile(selected_file)
-        if words == []:
-            print("File is empty")
-            exit(0)
+        if not int(user_input) in [1, 2, 3]:
+            continue
 
-        random.shuffle(words)
-        right = 0
-        total = min(10, len(words))
+        choice = int(user_input)
 
-        for i in range(total):
-            en, trans, ru = words[i]
+        if choice == 3:
+            break
+        if choice == 2:
+            settingsTab()
+        if choice == 1:
+            testTab()
 
-            if(engLang == 1):
-                question = en
-                answer = ru
-            else:
-                question = ru
-                answer = en
-
-            print(f"\n{i + 1}. {question} ({trans})")
-            ans = input("Answer: ").strip()
-
-            if ans.lower() == answer.lower():
-                print(colors.green("Right"))
-                right += 1
-            else:
-                print(colors.red("Wrong"))
-                print(f"Correct answer: {colors.blue(answer)}")
-
-        print(f"\nTotal: {right}/{total}")
-        choice = 0
-        continue
+if __name__ == "__main__":
+    main()
