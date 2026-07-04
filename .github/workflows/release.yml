@@ -1,0 +1,29 @@
+name: Build EXE
+
+on:
+  push:
+    tags:
+      - 'v*'
+
+jobs:
+  build:
+    runs-on: windows-latest
+
+    steps:
+    - uses: actions/checkout@v4
+
+    - uses: actions/setup-python@v5
+      with:
+        python-version: '3.11'
+
+    - name: Install
+      run: |
+        pip install pyinstaller 
+
+    - name: Build
+      run: pyinstaller --onefile --name="TestCreator" main.py
+
+    - name: Release
+      uses: softprops/action-gh-release@v1
+      with:
+        files: dist/TestCreator.exe
