@@ -144,16 +144,12 @@ def testTab():
             if ans == 'exit':
                 break
 
-
             if ans.lower() == answer.lower():
                 print(colors.green("Right"))
                 right += 1
             else:
                 print(colors.red("Wrong"))
                 print(f"Correct answer: {colors.blue(answer)}")
-
-
-
     choice = 0
     return
 
