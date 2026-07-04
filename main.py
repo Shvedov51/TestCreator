@@ -3,7 +3,14 @@ import colors
 import os
 os.system('color')
 
-engLang = 1;
+engLang = 1; # 1 - English, 2 - Russian
+
+def find_tc_files():
+    files = []
+    for file in os.listdir('.'):
+        if file.endswith('.tc'):
+            files.append(file)
+    return files
 
 def loadfile(name_file):
     words = []
@@ -33,9 +40,21 @@ while True:
         engLang = int(input("Enter your choice:"))
     if choice == 1:
         os.system('cls')
-        print("Enter a name file like <test.txt>")
-        name_file = input()
-        words = loadfile(name_file)
+        tests = find_tc_files()
+
+        for i, test in enumerate(tests, 1):
+            print(f"{i}. {test}")
+        test_number = int(input("Enter number of file:"))
+        os.system('cls')
+
+        if 1 <= test_number <= len(tests):
+            selected_file = tests[test_number - 1]
+            print(f"Selected: {selected_file}")
+        else:
+            print("Invalid number!")
+            continue
+
+        words = loadfile(selected_file)
         if words == []:
             print("File is empty")
             exit(0)
@@ -67,16 +86,3 @@ while True:
         print(f"\nTotal: {right}/{total}")
         choice = 0
         continue
-
-
-
-
-
-
-
-
-
-
-
-
-
