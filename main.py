@@ -84,7 +84,8 @@ def testTab():
 
     random.shuffle(words)
     right = 0
-    total = min(10, len(words))
+    wrong_words = []
+    total = min(20, len(words))
 
     for i in range(total):
         en, trans, ru = words[i]
@@ -108,10 +109,42 @@ def testTab():
         else:
             print(colors.red("Wrong"))
             print(f"Correct answer: {colors.blue(answer)}")
+            wrong_words.append([en, trans, ru])
 
     end_time = time.time()
     total_time = end_time - start_time
     print(f"\nTotal: {right}/{total} {right/total*100:.1f}% {total_time:.2f}s")
+    print("Do u wanna resolve only mistakes?")
+    print("y - yes, n - no")
+    if input() == "y":
+        os.system('cls')
+        total = min(20, len(wrong_words))
+
+        for i in range(total):
+            en, trans, ru = wrong_words[i]
+
+            if (engLang == 1):
+                question = en
+                answer = ru
+            else:
+                question = ru
+                answer = en
+
+            print(f"\n{i + 1}. {question} ({trans})")
+            ans = input("Answer: ").strip()
+
+            if ans == 'exit':
+                break
+
+            if ans.lower() == answer.lower():
+                print(colors.green("Right"))
+                right += 1
+            else:
+                print(colors.red("Wrong"))
+                print(f"Correct answer: {colors.blue(answer)}")
+
+
+
     choice = 0
     return
 
